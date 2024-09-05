@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -20,6 +21,7 @@ import com.gs.keyboard.databinding.DialogKeyboardBinding;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardActionListener {
@@ -127,6 +129,7 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
         if (isNumberRandom) {
              randomNumbers();
         }
+
         mOrderToKeyboard.put(ORDER_NUMBER, mNumberKeyboard);
         mOrderToKeyboard.put(ORDER_SYMBOL, mSymbolKeyboard);
         mOrderToKeyboard.put(ORDER_LETTER, mLetterKeyboard);
