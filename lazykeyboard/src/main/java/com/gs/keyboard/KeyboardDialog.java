@@ -125,7 +125,7 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
             mNumberKeyboard = new Keyboard(getContext(), R.xml.gs_keyboard_number_land);
         }
         if (isNumberRandom) {
-            randomNumbers();
+             randomNumbers();
         }
         mOrderToKeyboard.put(ORDER_NUMBER, mNumberKeyboard);
         mOrderToKeyboard.put(ORDER_SYMBOL, mSymbolKeyboard);
@@ -184,19 +184,20 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
      * 键盘数字随机切换
      */
     private void randomNumbers() {
-        if (mNumberKeyboard != null) {
-            ArrayList<String> source = new ArrayList<>(mNumberPool);
-            List<Keyboard.Key> keys = mNumberKeyboard.getKeys();
-            for (Keyboard.Key key : keys) {
-                if (key.label != null && isNumber(key.label.toString())) {
-                    int number = new Random().nextInt(source.size());
-                    String[] text = source.get(number).split("#");
-                    key.label = text[1];
-                    key.codes[0] = Integer.valueOf(text[0], 10);
-                    source.remove(number);
-                }
-            }
-        }
+        // 取消随机
+//        if (mNumberKeyboard != null) {
+//            ArrayList<String> source = new ArrayList<>(mNumberPool);
+//            List<Keyboard.Key> keys = mNumberKeyboard.getKeys();
+//            for (Keyboard.Key key : keys) {
+//                if (key.label != null && isNumber(key.label.toString())) {
+//                    int number = new Random().nextInt(source.size());
+//                    String[] text = source.get(number).split("#");
+//                    key.label = text[1];
+//                    key.codes[0] = Integer.valueOf(text[0], 10);
+//                    source.remove(number);
+//                }
+//            }
+//        }
     }
 
     private boolean isNumber(String str) {
