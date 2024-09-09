@@ -121,19 +121,19 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
             int windowHeight = window.getDecorView().getHeight();
 
             if (windowHeight == 0) {
-                windowHeight = 500;
+                windowHeight = 300;
             }
 
 
             // Check if the keyboard would cover the SecurityEditText
             if (editTextY + tEditTextHeight + windowHeight > screenHeight) {
                 layoutParams.gravity = Gravity.TOP;
-                layoutParams.y = editTextY - windowHeight - 100;
-                mBinding.keyboardView.setPadding(8, 8, 8, 28);
+                layoutParams.y = editTextY - windowHeight - 50;
+                mBinding.keyboardView.setPadding(8, 8, 8, 18);
             } else {
                 layoutParams.gravity = Gravity.BOTTOM;
                 layoutParams.y = 0; // Reset y position for bottom alignment
-                mBinding.keyboardView.setPadding(8, 8, 8, 108);
+                mBinding.keyboardView.setPadding(8, 8, 8, 58);
             }
             window.setAttributes(layoutParams);
         }
