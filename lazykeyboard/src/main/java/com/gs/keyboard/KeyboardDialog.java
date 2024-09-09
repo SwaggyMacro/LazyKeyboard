@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -77,10 +78,32 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
         initKeyboardChooser();
     }
 
+// Modify the `KeyboardDialog` class in `lazykeyboard/src/main/java/com/gs/keyboard/KeyboardDialog.java`
+
+// Modify the `KeyboardDialog` class in `lazykeyboard/src/main/java/com/gs/keyboard/KeyboardDialog.java`
 
     @Override
     protected void onStart() {
         super.onStart();
+        adjustDialogPosition();
+        addGlobalLayoutListener();
+    }
+
+    private void addGlobalLayoutListener() {
+        SecurityEditText editText = mTargetEditText.get();
+        if (editText != null) {
+            ViewTreeObserver.OnGlobalLayoutListener listener = new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    adjustDialogPosition();
+                    editText.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            };
+            editText.getViewTreeObserver().addOnGlobalLayoutListener(listener);
+        }
+    }
+
+    public void adjustDialogPosition() {
         Window window = getWindow();
         if (window != null) {
             WindowManager.LayoutParams layoutParams = window.getAttributes();
@@ -89,15 +112,28 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
             setCanceledOnTouchOutside(false);
             window.setWindowAnimations(R.style.KeyboardDialogAnimation);
 
-            // Move the dialog to the top or bottom of the screen
-            boolean moveToTop = true; // Set this to false to move to the bottom
-            if (moveToTop) {
+            // Get the location of the SecurityEditText
+            int[] location = new int[2];
+            mTargetEditText.get().getLocationOnScreen(location);
+            int editTextY = location[1];
+            int screenHeight = getContext().getResources().getDisplayMetrics().heightPixels;
+            int tEditTextHeight =  mTargetEditText.get().getHeight();
+            int windowHeight = window.getDecorView().getHeight();
+
+            if (windowHeight == 0) {
+                windowHeight = 500;
+            }
+
+
+            // Check if the keyboard would cover the SecurityEditText
+            if (editTextY + tEditTextHeight + windowHeight > screenHeight) {
                 layoutParams.gravity = Gravity.TOP;
-                mBinding.keyboardView.setPadding(8, 8, 8, 58);
+                layoutParams.y = editTextY - windowHeight - 100;
+                mBinding.keyboardView.setPadding(8, 8, 8, 28);
             } else {
                 layoutParams.gravity = Gravity.BOTTOM;
-                // set keyboard_view padding
-                mBinding.keyboardView.setPadding(8, 8, 8, 8);
+                layoutParams.y = 0; // Reset y position for bottom alignment
+                mBinding.keyboardView.setPadding(8, 8, 8, 108);
             }
             window.setAttributes(layoutParams);
         }

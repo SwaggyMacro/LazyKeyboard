@@ -1,8 +1,6 @@
 package cn.onlyloveyd.lazybear;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +16,7 @@ public class LazyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityLazyBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_lazy);
 
-        AppCompatButton button = findViewById(R.id.btn_login);
+        AppCompatButton button = findViewById(R.id.btnlogin);
 //        button.setOnClickListener(v-> KeyboardDialog.show(this, binding.loginInputUsername));
         // Hide the navigation bar
         controlBottomNavigation(false);

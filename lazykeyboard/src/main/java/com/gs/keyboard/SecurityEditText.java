@@ -65,6 +65,9 @@ public class SecurityEditText extends AppCompatEditText {
     }
 
 
+
+// Modify the `SecurityEditText` class in `lazykeyboard/src/main/java/com/gs/keyboard/SecurityEditText.java`
+
     @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
@@ -85,19 +88,20 @@ public class SecurityEditText extends AppCompatEditText {
         return false;
     }
 
-    private void hideSystemKeyboard() {
-        InputMethodManager manager = (InputMethodManager) this.getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (manager != null) {
-            manager.hideSoftInputFromWindow(this.getWindowToken(), 0);
-        }
-    }
-
     private void showSoftInput() {
         if (dialog == null) {
             dialog = KeyboardDialog.show(getContext(), this);
         } else {
             dialog.show();
+            dialog.adjustDialogPosition(); // Adjust position when showing the dialog
+        }
+    }
+
+    private void hideSystemKeyboard() {
+        InputMethodManager manager = (InputMethodManager) this.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (manager != null) {
+            manager.hideSoftInputFromWindow(this.getWindowToken(), 0);
         }
     }
 
