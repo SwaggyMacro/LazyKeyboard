@@ -12,7 +12,6 @@ import android.text.Editable;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -21,7 +20,6 @@ import com.gs.keyboard.databinding.DialogKeyboardBinding;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardActionListener {
@@ -79,18 +77,29 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
         initKeyboardChooser();
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
         Window window = getWindow();
         if (window != null) {
             WindowManager.LayoutParams layoutParams = window.getAttributes();
-            layoutParams.gravity = Gravity.BOTTOM;
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
             setCanceledOnTouchOutside(false);
-            window.setAttributes(layoutParams);
             window.setWindowAnimations(R.style.KeyboardDialogAnimation);
+
+            // Move the dialog to the top or bottom of the screen
+            boolean moveToTop = true; // Set this to false to move to the bottom
+            if (moveToTop) {
+                layoutParams.gravity = Gravity.TOP;
+                mBinding.keyboardView.setPadding(8, 8, 8, 58);
+            } else {
+                layoutParams.gravity = Gravity.BOTTOM;
+                // set keyboard_view padding
+                mBinding.keyboardView.setPadding(8, 8, 8, 8);
+            }
+            window.setAttributes(layoutParams);
         }
     }
 
@@ -127,9 +136,8 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
             mNumberKeyboard = new Keyboard(getContext(), R.xml.gs_keyboard_number_land);
         }
         if (isNumberRandom) {
-             randomNumbers();
+            randomNumbers();
         }
-
         mOrderToKeyboard.put(ORDER_NUMBER, mNumberKeyboard);
         mOrderToKeyboard.put(ORDER_SYMBOL, mSymbolKeyboard);
         mOrderToKeyboard.put(ORDER_LETTER, mLetterKeyboard);
@@ -187,20 +195,19 @@ public class KeyboardDialog extends Dialog implements KeyboardView.OnKeyboardAct
      * 键盘数字随机切换
      */
     private void randomNumbers() {
-        // 取消随机
-//        if (mNumberKeyboard != null) {
-//            ArrayList<String> source = new ArrayList<>(mNumberPool);
-//            List<Keyboard.Key> keys = mNumberKeyboard.getKeys();
-//            for (Keyboard.Key key : keys) {
-//                if (key.label != null && isNumber(key.label.toString())) {
-//                    int number = new Random().nextInt(source.size());
-//                    String[] text = source.get(number).split("#");
-//                    key.label = text[1];
-//                    key.codes[0] = Integer.valueOf(text[0], 10);
-//                    source.remove(number);
-//                }
-//            }
-//        }
+        if (mNumberKeyboard != null) {
+            ArrayList<String> source = new ArrayList<>(mNumberPool);
+            List<Keyboard.Key> keys = mNumberKeyboard.getKeys();
+            for (Keyboard.Key key : keys) {
+                if (key.label != null && isNumber(key.label.toString())) {
+                    int number = new Random().nextInt(source.size());
+                    String[] text = source.get(number).split("#");
+                    key.label = text[1];
+                    key.codes[0] = Integer.valueOf(text[0], 10);
+                    source.remove(number);
+                }
+            }
+        }
     }
 
     private boolean isNumber(String str) {
